@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="title">Easy Route</div>
+    <div class="sub-title">Create a new user</div>
+
+    <form action="{{url_for('signup')}}" class="form" method="POST">
+        <input id="username" name="username" placeholder="Username" type="text" value={{data['username']}}><br>
+        <input id="password" name="password" placeholder="Password" type="text" value={{data['password']}}><br>
+        <input id="password2" name="password2" placeholder="Confirm Password" type="text"
+               value={{data['password2']}}><br>
+        <input id="email" name="email" placeholder="Email" type="text" value={{data['email']}}><br>
+
+        <div class="signup-btn">
+            <input type="submit" value="Sign Up">
+        </div>
+
+    </form>
+
+<div class="error">{{error}}</div>
+
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+Welcome to Easy route. You are on your home page.
+
+<form action="{{url_for('create')}}">
+    <input type="submit" value="Create a new trip">
+</form>
+
+<form action="{{url_for('view')}}" method="GET">
+    <input type="submit" value="View upcoming trips">
+</form>
+
+</body>
+</html>
