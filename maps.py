@@ -4,10 +4,14 @@ import json
 import requests
 
 
-class GooglePlaces(object):
-    def __init__(self, apiKey=''):
-        super(GooglePlaces, self).__init__()
-        self.apiKey = apiKey
+class GoogleMaps(object):
+    def __init__(self):
+        super(GoogleMaps, self).__init__()
+
+        with open('keys.json') as json_file:
+            keys = json.load(json_file)
+
+        self.apiKey = keys["gmaps"]
 
     def get_place_details(self, place_id, fields=['opening_hours']):
         endpoint_url = "https://maps.googleapis.com/maps/api/place/details/json"
@@ -39,12 +43,11 @@ class GooglePlaces(object):
 
 # def get_time_format(time):
 #     time_format = "%I:%M %p"
-    
+
 #     if not any(time.find(option) != -1 for option in ['am', 'pm', "AM", "PM"]):
 #         time_format = "%I:%M"
 
 #     return time_format
-
 
 
 # if __name__ == "__main__":
@@ -52,7 +55,7 @@ def getMapsInfo(user_query="Museum of fine arts"):
     with open('keys.json') as json_file:
         keys = json.load(json_file)
 
-    api = GooglePlaces(keys["gmaps"])
+    api = GoogleMaps()
 
     places = api.query(user_query)
     # choice = places[0]  # the first result is fine for now
@@ -61,7 +64,9 @@ def getMapsInfo(user_query="Museum of fine arts"):
     # print("Address:", choice["formatted_address"])
     # print("Geo Location:", choice["geometry"]["location"])
 
-def getMapsDetails(choice): 
+
+def getMapsDetails(choice):
+    api = GoogleMaps()
     place_details = api.get_place_details(choice['place_id'])
     if place_details != {}:
         # Get the number of days between the current day and each day of the week
@@ -84,7 +89,7 @@ def getMapsDetails(choice):
 
                     opening_date = today + datetime.timedelta(days=offset[day], weeks=0)
                     closing_date = today + datetime.timedelta(days=offset[day], weeks=0)
-                
+
                 else:
                     opening_time, closing_time = times.split(" – ")
 
@@ -138,17 +143,16 @@ def getMapsDetails(choice):
             "name": choice["name"],
             "Address:": choice["formatted_address"],
             "Geo Location:": choice["geometry"]["location"],
-            "week_details":week_details
-            }
+            "week_details": week_details
+        }
         return place_details
     else:
         place_details = {
             "name": choice["name"],
             "Address:": choice["formatted_address"],
             "Geo Location:": choice["geometry"]["location"]
-            }
+        }
 
         return place_details
-
 
 # place_details = getMapsInfo("MIT Dome")

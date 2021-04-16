@@ -22,22 +22,6 @@
       id="search"
       name="search"
     >
-      <input type="date" name="date" value="{{date}}" />
-      <input
-        type="time"
-        name="start_time"
-        min="00:00"
-        max="24:00"
-        value="08:00"
-      />
-      <input
-        type="time"
-        name="end_time"
-        min="00:00"
-        max="24:00"
-        value="17:00"
-      />
-
       <div class="new-entry" action="{{url_for('create')}}" method="POST">
         <input id="query" name="query" placeholder="Search" type="text"
         value={{data['query']}}><br />
@@ -65,29 +49,28 @@
           id="display_search"
           name="display_search"
         >
-          <h1>Search Results</h1>
+          <h2>Search Results</h2>
           <ul>
             {% for result in query_results %}
             <li>
-              <input value="{{result['name']+', '+result['address']}}" name="{{result}}" type="submit" />
+              <input value="{{result['name'] + ' - ' + result['formatted_address']}}" name="{{result}}" type="submit" />
             </li>
             {% endfor %}
           </ul>
         </form>
       </div>
       <div class="column">
-        Hey this is column 2
         <form
-          action="{{url_for('create')}}"
+          action="{{url_for('complete')}}"
           method="POST"
           id="selected_spots"
           name="selected_spots"
         >
-          <h1>Your selections</h1>
+          <h2>Your selections</h2>
           <ul>
             {% for selection in selections %}
             <li>
-              {{selection}}
+              {{selection['name']}}
             </li>
             {% endfor %}
           </ul>

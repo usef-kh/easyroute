@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      href="{{url_for('static',filename='styles/create.css') }}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta charset="UTF-8" />
+    <title>Easy Route</title>
+  </head>
+
+  <body>
+    <form
+      action="{{url_for('create')}}"
+      method="POST"
+      id="search"
+      name="search"
+    >
+      <input type="date" name="date" value="{{date}}" />
+      <input
+        type="time"
+        name="start_time"
+        min="00:00"
+        max="24:00"
+        value="08:00"
+      />
+      <input
+        type="time"
+        name="end_time"
+        min="00:00"
+        max="24:00"
+        value="17:00"
+      />
+
+
+      <div>
+          <label for="starting_point">Starting Point</label>
+          <select id='starting_point' name="starting_point">
+              {% for selection in selections %}
+              <option value="{{selection['name']}}">{{selection['name']}}</option>
+
+              {% endfor %}
+          </select>
+      </div>
+
+      <div>
+          <label for="ending_point">Ending Point</label>
+          <select id='ending_point' name="ending_point">
+              {% for selection in selections %}
+              <option value="{{selection['name']}}">{{selection['name']}}</option>
+
+              {% endfor %}
+          </select>
+      </div>
+
+
+
+    </form>
+
+  </body>
+</html>
