@@ -1,52 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link href="{{url_for('static',filename='styles/create.css') }}" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+  <head>
+    <link
+      href="{{url_for('static',filename='styles/create.css') }}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap"
+      rel="stylesheet"
+    />
 
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Easy Route</title>
-</head>
+  </head>
 
-<body>
+  <body>
+    <form
+      action="{{url_for('create')}}"
+      method="POST"
+      id="search"
+      name="search"
+    >
+      <input type="date" name="date" value="{{date}}" />
+      <input
+        type="time"
+        name="start_time"
+        min="00:00"
+        max="24:00"
+        value="08:00"
+      />
+      <input
+        type="time"
+        name="end_time"
+        min="00:00"
+        max="24:00"
+        value="17:00"
+      />
 
-<form action="{{url_for('create')}}" method="POST">
-    <input type="date" name="date" value={{date}}>
-    <input type="time" name="start_time" min="00:00" max="24:00" value="08:00">
-    <input type="time" name="end_time" min="00:00" max="24:00" value="17:00">
+      <div class="new-entry" action="{{url_for('create')}}" method="POST">
+        <input id="query" name="query" placeholder="Search" type="text"
+        value={{data['query']}}><br />
+        <label for="dwell_time">Number of Hours</label><br />
 
+        <input
+          type="range"
+          id="dwell_time"
+          name="dwell_time"
+          min="0"
+          max="10"
+          step="0.5"
+          oninput="this.nextElementSibling.value = this.value"
+        />
+        <output>6</output><br />
+      </div>
+      <input type="submit" value="Search" name="search" />
+    </form>
 
     <div class="row">
-        <div class="column">
-            <div class="new-entry" action="{{url_for('create')}}" method="POST">
-                <input id="query" name="query" placeholder="Search" type="text" value={{data['query']}}><br>
-                <label for="dwell_time">Number of Hours</label><br>
-
-                <input type="range" id="dwell_time" name="dwell_time" min="0" max="10" step="0.5" oninput="this.nextElementSibling.value = this.value">
-                <output>5</output><br>
-
-<!--                <input type="submit" value="Search">-->
-
-            </div>
-
-            <div class="query-results">
-                Hey these are your results.
-<!--                <input id="query" name="query" placeholder="Search" type="text" value={{data['query']}}><br>-->
-<!--                <label for="dwell_time">Number of Hours</label><br>-->
-<!--    -->
-<!--                <input type="range" id="dwell_time" name="dwell_time" min="0" max="10" step="0.5" oninput="this.nextElementSibling.value = this.value">-->
-<!--                <output>5</output><br>-->
-            </div>
-
-
-
-        </div>
-
-        <div class="column">Hey this is column 2</div>
+      <div class="column">
+        <form
+          action="{{url_for('create')}}"
+          method="POST"
+          id="display_search"
+          name="display_search"
+        >
+          <h1>Search Results</h1>
+          <ul>
+            {% for result in query_results %}
+            <li>
+              <input value="{{result['name']+', '+result['address']}}" name="{{result}}" type="submit" />
+            </li>
+            {% endfor %}
+          </ul>
+        </form>
+      </div>
+      <div class="column">
+        Hey this is column 2
+        <form
+          action="{{url_for('create')}}"
+          method="POST"
+          id="selected_spots"
+          name="selected_spots"
+        >
+          <h1>Your selections</h1>
+          <ul>
+            {% for selection in selections %}
+            <li>
+              {{selection}}
+            </li>
+            {% endfor %}
+          </ul>
+          <input type="submit" value="Confirm" name="confirm" />
+        </form>
+      </div>
     </div>
-
-    <input type="submit" value="Confirm">
-</form>
-
-</body>
+  </body>
 </html>

@@ -55,13 +55,13 @@ def getMapsInfo(user_query="Museum of fine arts"):
     api = GooglePlaces(keys["gmaps"])
 
     places = api.query(user_query)
-    choice = places[0]  # the first result is fine for now
+    # choice = places[0]  # the first result is fine for now
+    return places
+    # print("Name:", choice["name"])
+    # print("Address:", choice["formatted_address"])
+    # print("Geo Location:", choice["geometry"]["location"])
 
-    print("Name:", choice["name"])
-    print("Address:", choice["formatted_address"])
-    print("Geo Location:", choice["geometry"]["location"])
-
-    
+def getMapsDetails(choice): 
     place_details = api.get_place_details(choice['place_id'])
     if place_details != {}:
         # Get the number of days between the current day and each day of the week
@@ -125,14 +125,14 @@ def getMapsInfo(user_query="Museum of fine arts"):
 
             week_details[day] = timings
 
-        # Print results
-        for day, info in week_details.items():
-            print(day)
+        # # Print results
+        # for day, info in week_details.items():
+        #     print(day)
 
-            for k, v in info.items():
-                print(k, v)
+        #     for k, v in info.items():
+        #         print(k, v)
 
-            print()
+        #     print()
 
         place_details = {
             "name": choice["name"],
@@ -151,4 +151,4 @@ def getMapsInfo(user_query="Museum of fine arts"):
         return place_details
 
 
-place_details = getMapsInfo("MIT Dome")
+# place_details = getMapsInfo("MIT Dome")
