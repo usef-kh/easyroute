@@ -17,51 +17,53 @@
 
   <body>
     <form
-      action="{{url_for('create')}}"
+      action="{{url_for('complete')}}"
       method="POST"
       id="search"
       name="search"
     >
-      <input type="date" name="date" value="{{date}}" />
+      <label for="date">Day of trip: </label>
+      <input type="date" name="date" value="{{date}}" id="date" />
+      <label for="start_time">Start at: </label>
       <input
         type="time"
         name="start_time"
         min="00:00"
         max="24:00"
         value="08:00"
+        id="start_time"
       />
+      <label for="end_time">End at: </label>
       <input
         type="time"
         name="end_time"
         min="00:00"
         max="24:00"
         value="17:00"
+        id="end_time"
       />
 
-
       <div>
-          <label for="starting_point">Starting Point</label>
-          <select id='starting_point' name="starting_point">
-              {% for selection in selections %}
-              <option value="{{selection['name']}}">{{selection['name']}}</option>
+        <label for="starting_point">Starting Point</label>
+        <select id="starting_point" name="starting_point">
+          {% for place in iternarary %}
+          <option value="{{place['name']}}">{{place['name']}}</option>
 
-              {% endfor %}
-          </select>
+          {% endfor %}
+        </select>
       </div>
 
       <div>
-          <label for="ending_point">Ending Point</label>
-          <select id='ending_point' name="ending_point">
-              {% for selection in selections %}
-              <option value="{{selection['name']}}">{{selection['name']}}</option>
+        <label for="ending_point">Ending Point</label>
+        <select id="ending_point" name="ending_point">
+          {% for place in iternarary %}
+          <option value="{{place['name']}}">{{place['name']}}</option>
 
-              {% endfor %}
-          </select>
+          {% endfor %}
+        </select>
       </div>
 
-
-
+      <input type="submit" value="Confirm" name="confirm" />
     </form>
-
   </body>
 </html>

@@ -5,11 +5,13 @@ import datetime
 from flask import Flask, render_template, request, redirect, url_for
 
 from databases.users import Users
-from maps import GoogleMaps
+from maps import Maps
+
+import datetime
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
-gmaps = GoogleMaps()
-selections = []  # this is a global variable that contains where the user wats to go
+maps = Maps()
+iternarary = []  # this is a global variable that contains where the user wats to go
 
 
 @app.route('/')
@@ -67,21 +69,21 @@ def home():
 
 @app.route('/user/create', methods=['POST', 'GET'])
 def create():
-    global selections
+    global iternarary
 
     if request.method == "GET":
         return render_template(
             "create.html",
             data=collections.defaultdict(str),
             query_results=[],
-            selections=[],
+            iternarary=[],
         )
 
     data = request.form
 
     if "search" in data:  # display new search results
 
-        places = gmaps.query(data["query"])
+        places = maps.query(data["query"])
 
         count = min(len(places), 10)
         query_results = places[:count]
@@ -91,37 +93,39 @@ def create():
             "dwell_time": data["dwell_time"]
         }
 
-        selections.append(info)
+        iternarary.append(info)
 
     else:  # add my selection to sidebar
 
         selection = list(data.keys())[0]  # only one selection will be made
         selection = ast.literal_eval(selection)  # convert selection from str to dict
 
-        selections[-1].update(selection)  # theres already dictionary that has dwell_time, update it
+        iternarary[-1].update(selection)  # theres already dictionary that has dwell_time, update it
         query_results = []  # reset query results, after choosing
 
-    return render_template("create.html", data=data, query_results=query_results, selections=selections)
+    return render_template("create.html", data=data, query_results=query_results, iternarary=iternarary)
 
 
 @app.route('/user/complete', methods=['POST', 'GET'])
 def complete():
-    global selections
+    global iternarary
 
     if request.method == "GET":
         return render_template(
             "complete.html",
             data=collections.defaultdict(str),
             date=datetime.date.today(),
-            selections=selections,
+            iternarary=iternarary,
         )
 
-    # change this later so that we take care of the post method and show a map / schedule
+    data = request.form
+    print(maps.route(iternarary, data))
+    
     return render_template(
         "complete.html",
         data=collections.defaultdict(str),
         date=datetime.date.today(),
-        selections=selections,
+        iternarary=iternarary,
     )
 
 

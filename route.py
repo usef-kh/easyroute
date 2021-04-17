@@ -72,19 +72,19 @@ def places2SetUp(place_details, day_picked, dwellTime ="00:30:08.3850000", prior
 #             "name": "loc1",
 #             "openingTime": "2019-11-09T09:00:00",
 #             "closingTime": "2019-11-09T18:00:00",
-#             "dwellTime": "01:31:08.3850000",
+#             "dwellTime": "1:31:08.3850000",
 #             "priority": 1,
 #             "quantity" : [],             
 #             "location": {
-#                 "latitude": 47.692290770423,
+#                 "latitude": 47.6922907,
 #                 "longitude": -122.385954752402
 #             }
 #         },
 #         {
 #             "name": "loc2",
 #             "openingTime": "2019-11-09T09:00:00",
-#             "closingTime": "2019-11-09T18:00:00",
-#             "dwellTime": "01:00:32.6770000",
+#             "closingTime": "2019-11-14T18:00:00",
+#             "dwellTime": "01:00:32.0000000",
 #             "priority": 1,
 #             "quantity" :[],
 #             "location": {
@@ -130,7 +130,38 @@ def places2SetUp(place_details, day_picked, dwellTime ="00:30:08.3850000", prior
 #         }
 #     ]
 # }
+input_info_dic = {'agents': [
+            {'name': 'agentName', 
+            'shifts': [
+                {
+                    'startTime': '2021-04-16T08:00:00', 
+                    'startLocation': {
+                        'latitude': 42.3546301, 
+                        'longitude': -71.13394020000001
+                        },
+                    'endTime': '2021-04-16T17:00:00', 
+                    'endLocation': {
+                        'latitude': 42.3597656, 
+                        'longitude': -71.092067}
+                    }
+                ]
+            }
+        ],
+    'itineraryItems': [
+            {
+            'name': 'Canada Goose Boston', 
+            'openingTime': '2021-04-16T00:00:00', 
+            'closingTime': '2021-04-16T23:00:00', 
+            'dwellTime': '5:00:00.0000000', 
+            'priority': 1, 
+            'quantity': [], 
+            'location': {
+                'latitude': 42.3474083, 
+                'longitude': -71.08181689999999}
+                }
+            ]
+        
+    }
 
-
-# resulting_route = getOptimizedRoute(input_info_dic)
-# print(resulting_route)
+resulting_route = getOptimizedRoute(input_info_dic)
+print(resulting_route)
