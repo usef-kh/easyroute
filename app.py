@@ -117,6 +117,7 @@ def complete():
             date=datetime.date.today(),
             iternarary=iternarary,
         )
+# if starting or ending need to make sure that the time matches the time of the place if it has opening or closing time
 
     data = request.form
     print(maps.route(iternarary, data))
