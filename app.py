@@ -1,6 +1,7 @@
 import ast
 import collections
 import datetime
+import json
 
 from flask import Flask, render_template, request, redirect, url_for
 
@@ -108,6 +109,10 @@ def create():
 def complete():
     global itinerary
 
+    def get_time(datetimestring):
+        return datetimestring.split("T")[1].split("+")[0]
+
+
     if request.method == "GET":
         return render_template(
             "complete.html",
@@ -120,26 +125,8 @@ def complete():
     data = request.form
     check, info = maps.route(itinerary, data)
 
-    if check:
-
-        schedule = []
-
-        for instruction in info:
-            if instruction["instructionType"] == "LeaveFromStartPoint":
-                print("Leave your starting point,", data["starting_point"])
-
-            elif instruction["instructionType"] == "TravelBetweenLocations":
-                print("travel to the next location", "duration=", instruction["duration"], "distance=",
-                      instruction["distance"])
-            elif instruction["instructionType"] == "VisitLocation":
-                location = instruction["itineraryItem"]
-                print("Enjoy your time at", location["name"], "for", location["dwellTime"])
-
-            elif instruction["instructionType"] == "ArriveToEndPoint":
-                print("Get to your ending point", data["ending_point"])
-
-    else:
-
+    # if something goes bad, try again
+    if not check:
         return render_template(
             "complete.html",
             data=collections.defaultdict(str),
@@ -148,14 +135,62 @@ def complete():
             error=info,
         )
 
-    return redirect(url_for('view', route=route))
+    schedule = []
+    for instruction in info:
+        if instruction["instructionType"] == "LeaveFromStartPoint":
 
+            item = {
+                "name": data["starting_point"],
+                "arrivingTime": "N/A",
+                "leavingTime": get_time(instruction["startTime"]),
+                "dwellTime": "N/A",
+            }
+
+            schedule.append(item)
+
+
+        elif instruction["instructionType"] == "TravelBetweenLocations":
+            continue    # for now lets ignore showing travel times
+            # print("travel to the next location", "duration=", instruction["duration"], "distance=",
+            #       instruction["distance"])
+
+        elif instruction["instructionType"] == "VisitLocation":
+            location = instruction["itineraryItem"]
+            # print(instruction["startTime"],instruction["startTime"])
+            item = {
+                "name": location["name"],
+                "arrivingTime": get_time(instruction["startTime"]),
+                "leavingTime": get_time(instruction["endTime"]),
+                "dwellTime": location["dwellTime"],
+            }
+            # print(item)
+            schedule.append(item)
+
+        elif instruction["instructionType"] == "ArriveToEndPoint":
+
+            item = {
+                "name": data["ending_point"],
+                "arrivingTime": get_time(instruction["startTime"]),
+                "leavingTime": "N/A",
+                "dwellTime": "N/A",
+            }
+
+            schedule.append(item)
+
+    return redirect(url_for('view', schedule={"schedule": schedule}))
 
 
 @app.route('/user/view', methods=['POST', 'GET'])
 def view():
-    return "helllo"
-    # return redirect(url_for('index'))
+    schedule_dic = ast.literal_eval(request.args['schedule'])
+    print(schedule_dic)
+    schedule = schedule_dic['schedule']
+    print(type(schedule), schedule)
+
+    return render_template(
+        "view.html",
+        schedule=schedule,
+    )
 
 
 if __name__ == '__main__':

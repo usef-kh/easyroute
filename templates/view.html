@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="title">Easy Route</div>
+    <div class="sub-title">Schedule</div>
+
+    <table>
+        <tr>
+<!--            <th>Stop Number</th>-->
+            <th>Name</th>
+            <th>Arriving Time</th>
+            <th>Leave Time</th>
+            <th>Dwell Time</th>
+        </tr>
+
+
+        {% for item in schedule %}
+            <tr>
+
+                <td>{{item["name"]}}</td>
+                <td>{{item["arrivingTime"]}}</td>
+                <td>{{item["leavingTime"]}}</td>
+                <td>{{item["dwellTime"]}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+<div class="error">{{error}}</div>
+
+
+</body>
+</html>
