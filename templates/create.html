@@ -34,9 +34,10 @@
           min="0"
           max="10"
           step="0.5"
+          value="1.0"
           oninput="this.nextElementSibling.value = this.value"
         />
-        <output>6</output><br />
+        <output>1</output><br />
       </div>
       <input type="submit" value="Search" name="search" />
     </form>
@@ -62,15 +63,15 @@
       <div class="column">
         <form
           action="{{url_for('complete')}}"
-          method="POST"
+          method="GET"
           id="selected_spots"
           name="selected_spots"
         >
-          <h2>Your selections</h2>
+          <h2>Your iternarary</h2>
           <ul>
-            {% for selection in selections %}
+            {% for place in iternarary %}
             <li>
-              {{selection['name']}}
+              {{place['name']}}
             </li>
             {% endfor %}
           </ul>
