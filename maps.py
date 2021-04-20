@@ -154,7 +154,7 @@ class Maps(object):
         response = requests.get(endpoint_url, params=params)
 
         result = json.loads(response.content)
-        
+        # print(result)
         if "result" not in result:
             timings = reformat_timings({})
 
@@ -165,7 +165,7 @@ class Maps(object):
         return timings
 
     def route(self, iternarary, data):
-        print(iternarary)
+        # print(iternarary)
         input_info_dic={}
         input_info_dic["itineraryItems"]=[]
         agentName= "agentName"
@@ -173,8 +173,9 @@ class Maps(object):
 
 
         for place in iternarary:
-            
-            timing_details = self.get_timing_details(place)
+            # print(place )
+            # print("\n")
+            timing_details = self.get_timing_details(place["place_id"])
         
             if place["name"] == data["starting_point"]:
                 start_time =  data["date"]+"T" + data["start_time"] + ":00"
@@ -185,9 +186,19 @@ class Maps(object):
                             "longitude": place["geometry"]["location"]["lng"]
                         }
                 }
-                
                 input_info_dic["agents"][0]["shifts"][0]={**input_info_dic["agents"][0]["shifts"][0], **start_info}
-            
+
+                if place["name"] == data["ending_point"]:
+                    end_time = data["date"]+"T" + data["end_time"] + ":00"
+                    end_info= {
+                            "endTime": end_time,
+                            "endLocation": {
+                                "latitude": place["geometry"]["location"]["lat"],
+                                "longitude": place["geometry"]["location"]["lng"]
+                            }
+                    }
+                    input_info_dic["agents"][0]["shifts"][0]={**input_info_dic["agents"][0]["shifts"][0], **end_info}
+
             elif place["name"] == data["ending_point"]:
                 end_time = data["date"]+"T" + data["end_time"] + ":00"
                 end_info= {
@@ -202,11 +213,11 @@ class Maps(object):
             
             else: 
                 check, item = prep_place_info(place, timing_details, data["date"])
-            
+                print(place["name"],item)
                 if check:
                     input_info_dic["itineraryItems"].append(item)
-            
-            print(str(input_info_dic))
+
+            # print(str(input_info_dic))
 
         #Making the dic from all the info into json for the bing api call
         input_info = json.dumps(input_info_dic)
@@ -231,11 +242,11 @@ class Maps(object):
 
 
 if __name__ == '__main__':
-    # maps = Maps()
+    maps = Maps()
 
-    # places = maps.query("79 washington street brookline")
+    places = maps.query("Stoked pizza")
 
-    # place = places[0]
+    place = places[0]
 
-    # print(maps.get_timing_details(place["place_id"]))
+    print(maps.get_timing_details(place["place_id"]))
     print("2021-04-16"+"T"+"08:00"+":00")
