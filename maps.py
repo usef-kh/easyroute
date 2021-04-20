@@ -5,22 +5,21 @@ import requests
 
 
 def reformat_timings(place_details):
-
     days = [
-        "monday", 
-        "tuesday", 
-        "wednesday", 
-        "thursday", 
-        "friday", 
-        "saturday", 
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
         "sunday"
     ]
-    
+
     # If we have no timing info, default to 24/7
-    if place_details == {}:    
+    if place_details == {}:
 
         place_details["opening_hours"] = {}
-       
+
         weekday_text = []
         for day in days:
             weekday_text.append(day + ": open 24 hours")
@@ -62,7 +61,7 @@ def reformat_timings(place_details):
                 offset_close = offset[day]
 
                 if closing_time < opening_time:  # if place closes the next day (in the AMs)
-                    print(closing_time, opening_time)
+                    # print(closing_time, opening_time)
                     offset_close += 1
 
                 # Convert to string in 24 hour format
@@ -91,24 +90,24 @@ def reformat_timings(place_details):
 
     return week_details
 
+
 def prep_place_info(place, timing_details, day_picked, priority=1):
-    
-    dwellTime = str(datetime.timedelta(hours=float(place["dwell_time"]))) + ".0000000" 
+    dwellTime = str(datetime.timedelta(hours=float(place["dwell_time"]))) + ".0000000"
 
     if day_picked in timing_details:
         timing_info = timing_details[day_picked]
 
         if timing_info['openingTime'] == "Closed":
             return False, "Place closed"
-            
+
         else:
-            place_details_formatted ={
+            place_details_formatted = {
                 "name": place["name"],
                 "openingTime": timing_info["openingTime"],
                 "closingTime": timing_info["closingTime"],
                 "dwellTime": dwellTime,
                 "priority": priority,
-                "quantity" : [],             
+                "quantity": [],
                 "location": {
                     "latitude": place["geometry"]["location"]["lat"],
                     "longitude": place["geometry"]["location"]["lng"]
@@ -128,7 +127,7 @@ class Maps(object):
 
         self.gmaps_key = keys["gmaps"]
         self.bing_key = keys["bingRouting"]
-        
+
     def query(self, query):
         query = "+".join(query.split(" "))
         endpoint_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
@@ -161,84 +160,76 @@ class Maps(object):
         else:
             timings = reformat_timings(result["result"])
 
-
         return timings
 
-    def route(self, iternarary, data):
-        # print(iternarary)
-        input_info_dic={}
-        input_info_dic["itineraryItems"]=[]
-        agentName= "agentName"
-        input_info_dic["agents"]=[{"name": agentName, "shifts": [{}]}]
+    def route(self, itinerary, data):
+        # print(itinerary)
+        input_info_dic = {}
+        input_info_dic["itineraryItems"] = []
+        agentName = "agentName"
+        input_info_dic["agents"] = [{"name": agentName, "shifts": [{}]}]
 
-
-        for place in iternarary:
+        for place in itinerary:
             # print(place )
             # print("\n")
             timing_details = self.get_timing_details(place["place_id"])
-        
+
             if place["name"] == data["starting_point"]:
-                start_time =  data["date"]+"T" + data["start_time"] + ":00"
-                start_info= {
-                        "startTime": start_time,
-                        "startLocation": {
-                            "latitude": place["geometry"]["location"]["lat"],
-                            "longitude": place["geometry"]["location"]["lng"]
-                        }
+                start_time = data["date"] + "T" + data["start_time"] + ":00"
+                start_info = {
+                    "name": place["name"],
+                    "startTime": start_time,
+                    "startLocation": {
+                        "latitude": place["geometry"]["location"]["lat"],
+                        "longitude": place["geometry"]["location"]["lng"]
+                    }
                 }
-                input_info_dic["agents"][0]["shifts"][0]={**input_info_dic["agents"][0]["shifts"][0], **start_info}
+                input_info_dic["agents"][0]["shifts"][0] = {**input_info_dic["agents"][0]["shifts"][0], **start_info}
 
                 if place["name"] == data["ending_point"]:
-                    end_time = data["date"]+"T" + data["end_time"] + ":00"
-                    end_info= {
-                            "endTime": end_time,
-                            "endLocation": {
-                                "latitude": place["geometry"]["location"]["lat"],
-                                "longitude": place["geometry"]["location"]["lng"]
-                            }
-                    }
-                    input_info_dic["agents"][0]["shifts"][0]={**input_info_dic["agents"][0]["shifts"][0], **end_info}
-
-            elif place["name"] == data["ending_point"]:
-                end_time = data["date"]+"T" + data["end_time"] + ":00"
-                end_info= {
+                    end_time = data["date"] + "T" + data["end_time"] + ":00"
+                    end_info = {
+                        "name": place["name"],
                         "endTime": end_time,
                         "endLocation": {
                             "latitude": place["geometry"]["location"]["lat"],
                             "longitude": place["geometry"]["location"]["lng"]
                         }
+                    }
+                    input_info_dic["agents"][0]["shifts"][0] = {**input_info_dic["agents"][0]["shifts"][0], **end_info}
+
+            elif place["name"] == data["ending_point"]:
+                end_time = data["date"] + "T" + data["end_time"] + ":00"
+                end_info = {
+                    "name": place["name"],
+                    "endTime": end_time,
+                    "endLocation": {
+                        "latitude": place["geometry"]["location"]["lat"],
+                        "longitude": place["geometry"]["location"]["lng"]
+                    }
                 }
-                
-                input_info_dic["agents"][0]["shifts"][0]={**input_info_dic["agents"][0]["shifts"][0], **end_info}
-            
-            else: 
+
+                input_info_dic["agents"][0]["shifts"][0] = {**input_info_dic["agents"][0]["shifts"][0], **end_info}
+
+            else:
                 check, item = prep_place_info(place, timing_details, data["date"])
-                print(place["name"],item)
                 if check:
                     input_info_dic["itineraryItems"].append(item)
 
-            # print(str(input_info_dic))
-
-        #Making the dic from all the info into json for the bing api call
+        # Making the dic from all the info into json for the bing api call
         input_info = json.dumps(input_info_dic)
-        
+
         # Make an Bing API call
         endpoint_url = "https://dev.virtualearth.net/REST/V1/Routes/OptimizeItinerary"
+        response = requests.post(endpoint_url + "?key=" + self.bing_key, data=input_info)
 
-        # params = {
-        #     'data': input_info,
-        #     'key': self.bing_key
-        # }
-
-        # response = requests.post(endpoint_url, params=params)
-        response = requests.post(endpoint_url+ "?key=" +self.bing_key,data=input_info)
-        #Puts response to a dic and return the part that contains the path
         try:
-            print(response.content)
+            # print(response.content)
             response_dic = json.loads(response.content)
-            return response_dic["resourceSets"]
+            return True, response_dic["resourceSets"][0]["resources"][0]["agentItineraries"][0]["instructions"]
+
         except Exception as e:
-            return "Failed", e
+            return False, e
 
 
 if __name__ == '__main__':
@@ -249,4 +240,4 @@ if __name__ == '__main__':
     place = places[0]
 
     print(maps.get_timing_details(place["place_id"]))
-    print("2021-04-16"+"T"+"08:00"+":00")
+    print("2021-04-16" + "T" + "08:00" + ":00")

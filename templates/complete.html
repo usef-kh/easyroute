@@ -46,7 +46,7 @@
       <div>
         <label for="starting_point">Starting Point</label>
         <select id="starting_point" name="starting_point">
-          {% for place in iternarary %}
+          {% for place in itinerary %}
           <option value="{{place['name']}}">{{place['name']}}</option>
 
           {% endfor %}
@@ -56,7 +56,7 @@
       <div>
         <label for="ending_point">Ending Point</label>
         <select id="ending_point" name="ending_point">
-          {% for place in iternarary %}
+          {% for place in itinerary %}
           <option value="{{place['name']}}">{{place['name']}}</option>
 
           {% endfor %}

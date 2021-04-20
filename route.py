@@ -1,19 +1,21 @@
-
-import requests
 import json
 
-#Function that makes call to get optimized route from bings api
-#Takes dic input in with format from: https://docs.microsoft.com/en-us/bingmaps/rest-services/routes/optimized-itinerary#api-templates
+import requests
+
+
+# Function that makes call to get optimized route from bings api
+# Takes dic input in with format from: https://docs.microsoft.com/en-us/bingmaps/rest-services/routes/optimized-itinerary#api-templates
 def getOptimizedRoute(input_info_dic):
-    #Transforms dic to json
+    # Transforms dic to json
     input_info = json.dumps(input_info_dic)
     # Get api key
     with open('keys.json') as json_file:
         data = json.load(json_file)
         bing_key = data["bingRouting"]
-    #Makes api call
-    response = requests.post("https://dev.virtualearth.net/REST/V1/Routes/OptimizeItinerary?key="+bing_key,data=input_info)
-    #Puts response to a dic and return the part that contains the path
+    # Makes api call
+    response = requests.post("https://dev.virtualearth.net/REST/V1/Routes/OptimizeItinerary?key=" + bing_key,
+                             data=input_info)
+    # Puts response to a dic and return the part that contains the path
     try:
         response_dic = json.loads(response.content)
         return response_dic["resourceSets"]
@@ -21,7 +23,7 @@ def getOptimizedRoute(input_info_dic):
         return "Failed"
 
 
-def places2SetUp(place_details, day_picked, dwellTime ="00:30:08.3850000", priority=1):
+def places2SetUp(place_details, day_picked, dwellTime="00:30:08.3850000", priority=1):
     if "week_details" in place_details:
         week_details = place_details["week_details"]
     else:
@@ -30,13 +32,13 @@ def places2SetUp(place_details, day_picked, dwellTime ="00:30:08.3850000", prior
         if week_details[day_picked]['openingTime'] == "Closed":
             return "Place closed"
         else:
-            place_details_formatted ={
+            place_details_formatted = {
                 "name": place_details["name"],
                 "openingTime": week_details[day_picked]["openingTime"],
                 "closingTime": week_details[day_picked]["closingTime"],
                 "dwellTime": dwellTime,
                 "priority": priority,
-                "quantity" : [],             
+                "quantity": [],
                 "location": {
                     "latitude": place_details["Geo Location:"]["lat"],
                     "longitude": place_details["Geo Location:"]["lng"]
@@ -131,37 +133,37 @@ def places2SetUp(place_details, day_picked, dwellTime ="00:30:08.3850000", prior
 #     ]
 # }
 input_info_dic = {'agents': [
-            {'name': 'agentName', 
-            'shifts': [
-                {
-                    'startTime': '2021-04-16T08:00:00', 
-                    'startLocation': {
-                        'latitude': 42.3546301, 
-                        'longitude': -71.13394020000001
-                        },
-                    'endTime': '2021-04-16T17:00:00', 
-                    'endLocation': {
-                        'latitude': 42.3597656, 
-                        'longitude': -71.092067}
-                    }
-                ]
-            }
-        ],
+    {'name': 'agentName',
+     'shifts': [
+         {
+             'startTime': '2021-04-16T08:00:00',
+             'startLocation': {
+                 'latitude': 42.3546301,
+                 'longitude': -71.13394020000001
+             },
+             'endTime': '2021-04-16T17:00:00',
+             'endLocation': {
+                 'latitude': 42.3597656,
+                 'longitude': -71.092067}
+         }
+     ]
+     }
+],
     'itineraryItems': [
-            {
-            'name': 'Canada Goose Boston', 
-            'openingTime': '2021-04-16T00:00:00', 
-            'closingTime': '2021-04-16T23:00:00', 
-            'dwellTime': '5:00:00.0000000', 
-            'priority': 1, 
-            'quantity': [], 
+        {
+            'name': 'Canada Goose Boston',
+            'openingTime': '2021-04-16T00:00:00',
+            'closingTime': '2021-04-16T23:00:00',
+            'dwellTime': '5:00:00.0000000',
+            'priority': 1,
+            'quantity': [],
             'location': {
-                'latitude': 42.3474083, 
+                'latitude': 42.3474083,
                 'longitude': -71.08181689999999}
-                }
-            ]
-        
-    }
+        }
+    ]
+
+}
 
 resulting_route = getOptimizedRoute(input_info_dic)
-print(resulting_route)
+# print(resulting_route)

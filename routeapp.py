@@ -1,13 +1,11 @@
-
 from route import *
-from maps import *
 
 
 def main():
-    user_query=""
+    user_query = ""
     places_details = []
     # while user_query != "Exit":
-    places_test = ["Museum of fine arts", "Dominos","Uniqlo", "MIT Dome"]
+    places_test = ["Museum of fine arts", "Dominos", "Uniqlo", "MIT Dome"]
     # Bug with uniqlo to fix
     for i in places_test:
         # print("Write Exit if you want to exit else \n")
@@ -23,11 +21,11 @@ def main():
     for place in places_details:
         place_details_formatted = places2SetUp(place, "friday")
         itineraryItems.append(place_details_formatted)
-    input_info_dic = {"itineraryItems":itineraryItems}
+    input_info_dic = {"itineraryItems": itineraryItems}
 
     print(input_info_dic)
     # Format agents
-    input_info_dic["agents"]= [
+    input_info_dic["agents"] = [
         {
             "name": "agentName",
             "shifts": [
@@ -47,9 +45,9 @@ def main():
         }
     ]
     # Finding the optimized route
-    resulting_route=getOptimizedRoute(input_info_dic)
-    for k,v in resulting_route[0]["resources"][0].items():
-        print(k,v)
+    resulting_route = getOptimizedRoute(input_info_dic)
+    for k, v in resulting_route[0]["resources"][0].items():
+        print(k, v)
 
 
 if __name__ == "__main__":

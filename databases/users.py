@@ -44,7 +44,7 @@ class Users:
             return False, "User does not exist"
 
         user = result[0]
-        print(user)
+        # print(user)
 
         if user[1] != password:
             return False, "Wrong password"
