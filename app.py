@@ -1,7 +1,6 @@
 import ast
 import collections
 import datetime
-import json
 
 from flask import Flask, render_template, request, redirect, url_for
 
@@ -81,18 +80,20 @@ def create():
     data = request.form
 
     if "search" in data:  # display new search results
+        query = data["query"]
+        query_results = []
+        if query:
+            places = maps.query(query)
 
-        places = maps.query(data["query"])
+            count = min(len(places), 10)
+            query_results = places[:count]
 
-        count = min(len(places), 10)
-        query_results = places[:count]
+            # create a dictionary where we will add all the info in later (check the else clause)
+            info = {
+                "dwell_time": data["dwell_time"]
+            }
 
-        # create a dictionary where we will add all the info in later (check the else clause)
-        info = {
-            "dwell_time": data["dwell_time"]
-        }
-
-        itinerary.append(info)
+            itinerary.append(info)
 
     else:  # add my selection to sidebar
 
@@ -111,7 +112,6 @@ def complete():
 
     def get_time(datetimestring):
         return datetimestring.split("T")[1].split("+")[0]
-
 
     if request.method == "GET":
         return render_template(
@@ -150,7 +150,7 @@ def complete():
 
 
         elif instruction["instructionType"] == "TravelBetweenLocations":
-            continue    # for now lets ignore showing travel times
+            continue  # for now lets ignore showing travel times
             # print("travel to the next location", "duration=", instruction["duration"], "distance=",
             #       instruction["distance"])
 
