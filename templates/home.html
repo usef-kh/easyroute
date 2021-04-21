@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="{{url_for('static',filename='styles/index.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<div class="main">
 
-Welcome to Easy route. You are on your home page.
-
-<form action="{{url_for('create')}}">
+    <div class="title">Easy Route</div>
+    <div class="sub-title">Home</div>
+<br>
+<form action="{{url_for('create')}}" class="options">
     <input type="submit" value="Create a new trip">
 </form>
-
+</div>
 <!--<form action="{{url_for('create')}}" method="GET">-->
 <!--    <input type="submit" value="View upcoming trips">-->
 <!--</form>-->

@@ -70,14 +70,17 @@ def create():
     global itinerary
 
     if request.method == "GET":
+        itinerary = []  # reset itinerary
+        data = collections.defaultdict(str)
+        data["dwell_time"] = 1
         return render_template(
             "create.html",
-            data=collections.defaultdict(str),
+            data=data,
             query_results=[],
-            itinerary=[],
+            itinerary=itinerary,
         )
 
-    data = request.form
+    data = request.form.to_dict()
 
     if "search" in data:  # display new search results
         query = data["query"]
@@ -102,6 +105,8 @@ def create():
 
         itinerary[-1].update(selection)  # theres already dictionary that has dwell_time, update it
         query_results = []  # reset query results, after choosing
+
+        data["dwell_time"] = 1  # reset dwell time to default, 1hr
 
     return render_template("create.html", data=data, query_results=query_results, itinerary=itinerary)
 

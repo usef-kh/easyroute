@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="{{url_for('static',filename='styles/index.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+
+
+    <style>
+    .main {
+      width: 650px;     // Overwrite this from CSS file
+    }
+
+    table {
+    margin: 0 auto; /* or margin: 0 auto 0 auto */
+    }
+
+    </style>
+
+
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<div class="main" >
 
-<div class="title">Easy Route</div>
+    <div class="title">Easy Route</div>
     <div class="sub-title">Schedule</div>
 
-    <table>
+    <table cellpadding="1px"cellspacing="20px">
         <tr>
-<!--            <th>Stop Number</th>-->
             <th>Name</th>
-            <th>Arriving Time</th>
-            <th>Leave Time</th>
+            <th>Arrival Time</th>
+            <th>Departure Time</th>
             <th>Dwell Time</th>
         </tr>
 
 
         {% for item in schedule %}
             <tr>
-
-                <td>{{item["name"]}}</td>
-                <td>{{item["arrivingTime"]}}</td>
-                <td>{{item["leavingTime"]}}</td>
-                <td>{{item["dwellTime"]}}</td>
+                <td align="center"valign="center">{{item["name"]}}</td>
+                <td align="center"valign="center">{{item["arrivingTime"]}}</td>
+                <td align="center"valign="center">{{item["leavingTime"]}}</td>
+                <td align="center"valign="center">{{item["dwellTime"]}}</td>
             </tr>
         {% endfor %}
     </table>
 
 <div class="error">{{error}}</div>
-
+</div>
 
 </body>
 </html>
