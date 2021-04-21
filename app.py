@@ -83,10 +83,11 @@ def create():
         )
 
     data = request.form.to_dict()
+    query_results = []
+    error = ""
 
     if "search" in data:  # display new search results
         query = data["query"]
-        query_results = []
 
         if query:
             places = maps.query(query)
@@ -101,6 +102,22 @@ def create():
 
             itinerary.append(info)
 
+    elif "itinerary" in data:  # remove unwanted itinerary item
+
+        selection = data["itinerary"]
+        idx = None
+
+        for i, item in enumerate(itinerary):
+            if item["name"] == selection:
+                idx = i
+                break
+
+        if idx is not None:
+            itinerary.pop(idx)
+        else:
+            error = "Removal Unsuccessful"
+
+
     else:  # add my selection to sidebar
 
         selection = list(data.keys())[0]  # only one selection will be made
@@ -109,9 +126,10 @@ def create():
         itinerary[-1].update(selection)  # theres already dictionary that has dwell_time, update it
         query_results = []  # reset query results, after choosing
 
-        data["dwell_time"] = 1  # reset dwell time to default, 1hr
+    if "dwell_time" not in data:
+        data["dwell_time"] = 1
 
-    return render_template("create.html", data=data, query_results=query_results, itinerary=itinerary)
+    return render_template("create.html", data=data, query_results=query_results, itinerary=itinerary, error=error)
 
 
 @app.route('/user/complete', methods=['POST', 'GET'])
@@ -146,16 +164,17 @@ def complete():
     schedule = []
     for instruction in info:
         if instruction["instructionType"] == "LeaveFromStartPoint":
+            place = instruction["itineraryItem"]
 
             item = {
                 "name": data["starting_point"],
                 "arrivingTime": "N/A",
                 "leavingTime": get_time(instruction["startTime"]),
                 "dwellTime": "N/A",
+                "location": place["location"],
             }
 
             schedule.append(item)
-
 
         elif instruction["instructionType"] == "TravelBetweenLocations":
             continue  # for now lets ignore showing travel times
@@ -163,41 +182,44 @@ def complete():
             #       instruction["distance"])
 
         elif instruction["instructionType"] == "VisitLocation":
-            location = instruction["itineraryItem"]
+            place = instruction["itineraryItem"]
             # print(instruction["startTime"],instruction["startTime"])
             item = {
-                "name": location["name"],
+                "name": place["name"],
                 "arrivingTime": get_time(instruction["startTime"]),
                 "leavingTime": get_time(instruction["endTime"]),
-                "dwellTime": location["dwellTime"],
+                "dwellTime": place["dwellTime"],
+                "location": place["location"],
             }
-            # print(item)
+
             schedule.append(item)
 
         elif instruction["instructionType"] == "ArriveToEndPoint":
-
+            place = instruction["itineraryItem"]
             item = {
                 "name": data["ending_point"],
                 "arrivingTime": get_time(instruction["startTime"]),
                 "leavingTime": "N/A",
                 "dwellTime": "N/A",
+                "location": place["location"],
             }
 
             schedule.append(item)
-
+    print(schedule)
     return redirect(url_for('view', schedule={"schedule": schedule}))
 
 
 @app.route('/user/view', methods=['POST', 'GET'])
 def view():
     schedule_dic = ast.literal_eval(request.args['schedule'])
-    print(schedule_dic)
+    # print(schedule_dic)
     schedule = schedule_dic['schedule']
-    print(type(schedule), schedule)
-
+    # print(type(schedule), schedule)
+    key = "https://maps.googleapis.com/maps/api/js?key=" + maps.gmaps_key + "&callback=initMap"
     return render_template(
         "view.html",
         schedule=schedule,
+        key=key
     )
 
 
