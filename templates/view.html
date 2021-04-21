@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="{{url_for('static',filename='styles/index.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static',filename='styles/styles.css') }}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
 
 
     <style>
-    .main {
-      width: 650px;     // Overwrite this from CSS file
+    .content {
+      width: 1000px;     // Overwrite this from CSS file
     }
 
-    table {
+    .main table {
     margin: 0 auto; /* or margin: 0 auto 0 auto */
     }
-
     </style>
 
 
@@ -21,7 +20,9 @@
     <title>Title</title>
 </head>
 <body>
-<div class="main" >
+
+<div class="content">
+    <div class="main">
 
     <div class="title">Easy Route</div>
     <div class="sub-title">Schedule</div>
@@ -45,7 +46,24 @@
         {% endfor %}
     </table>
 
-<div class="error">{{error}}</div>
+        <div class="error">{{error}}</div>
+    </div>
+
+        <div class="sidebar">
+
+        <form action="{{url_for('index')}}" class="module">
+            <input type="submit" value="Logout">
+        </form>
+
+        <form action="{{url_for('home')}}" class="module">
+            <input type="submit" value="Home">
+        </form>
+
+        <form action="{{url_for('create')}}" class="module">
+            <input type="submit" value="New Trip">
+        </form>
+
+    </div>
 </div>
 
 </body>

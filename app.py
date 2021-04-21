@@ -71,8 +71,10 @@ def create():
 
     if request.method == "GET":
         itinerary = []  # reset itinerary
+
         data = collections.defaultdict(str)
         data["dwell_time"] = 1
+
         return render_template(
             "create.html",
             data=data,
@@ -85,6 +87,7 @@ def create():
     if "search" in data:  # display new search results
         query = data["query"]
         query_results = []
+
         if query:
             places = maps.query(query)
 
