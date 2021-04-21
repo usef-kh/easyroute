@@ -146,16 +146,17 @@ def complete():
     schedule = []
     for instruction in info:
         if instruction["instructionType"] == "LeaveFromStartPoint":
+            place = instruction["itineraryItem"]
 
             item = {
                 "name": data["starting_point"],
                 "arrivingTime": "N/A",
                 "leavingTime": get_time(instruction["startTime"]),
                 "dwellTime": "N/A",
+                "location": place["location"],
             }
 
             schedule.append(item)
-
 
         elif instruction["instructionType"] == "TravelBetweenLocations":
             continue  # for now lets ignore showing travel times
@@ -163,15 +164,16 @@ def complete():
             #       instruction["distance"])
 
         elif instruction["instructionType"] == "VisitLocation":
-            location = instruction["itineraryItem"]
+            place = instruction["itineraryItem"]
             # print(instruction["startTime"],instruction["startTime"])
             item = {
-                "name": location["name"],
+                "name": place["name"],
                 "arrivingTime": get_time(instruction["startTime"]),
                 "leavingTime": get_time(instruction["endTime"]),
-                "dwellTime": location["dwellTime"],
+                "dwellTime": place["dwellTime"],
+                "location": place["location"],
             }
-            # print(item)
+
             schedule.append(item)
 
         elif instruction["instructionType"] == "ArriveToEndPoint":
@@ -181,6 +183,7 @@ def complete():
                 "arrivingTime": get_time(instruction["startTime"]),
                 "leavingTime": "N/A",
                 "dwellTime": "N/A",
+                "location": place["location"],
             }
 
             schedule.append(item)
@@ -191,9 +194,9 @@ def complete():
 @app.route('/user/view', methods=['POST', 'GET'])
 def view():
     schedule_dic = ast.literal_eval(request.args['schedule'])
-    print(schedule_dic)
+    # print(schedule_dic)
     schedule = schedule_dic['schedule']
-    print(type(schedule), schedule)
+    # print(type(schedule), schedule)
 
     return render_template(
         "view.html",
