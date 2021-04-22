@@ -46,7 +46,8 @@ def reformat_timings(place_details):
                 closing_time = "24:00:00"
 
                 opening_date = calender_date
-                closing_date = today + datetime.timedelta(days=offset[day], weeks=0)
+                closing_date = today + \
+                    datetime.timedelta(days=offset[day], weeks=0)
 
             else:
                 opening_time, closing_time = times.split(" – ")
@@ -54,23 +55,30 @@ def reformat_timings(place_details):
                 if opening_time[-2:] not in ['am', 'pm', "AM", "PM"]:
                     opening_time += " " + closing_time[-2:]
 
-                opening_time = datetime.datetime.strptime(opening_time, "%I:%M %p")
-                closing_time = datetime.datetime.strptime(closing_time, "%I:%M %p")
+                opening_time = datetime.datetime.strptime(
+                    opening_time, "%I:%M %p")
+                closing_time = datetime.datetime.strptime(
+                    closing_time, "%I:%M %p")
 
                 offset_open = offset[day]
                 offset_close = offset[day]
 
-                if closing_time < opening_time:  # if place closes the next day (in the AMs)
+                # if place closes the next day (in the AMs)
+                if closing_time < opening_time:
                     # print(closing_time, opening_time)
                     offset_close += 1
 
                 # Convert to string in 24 hour format
-                opening_time = datetime.datetime.strftime(opening_time, "%H:%M:%S %p")[:-3]
-                closing_time = datetime.datetime.strftime(closing_time, "%H:%M:%S %p")[:-3]
+                opening_time = datetime.datetime.strftime(
+                    opening_time, "%H:%M:%S %p")[:-3]
+                closing_time = datetime.datetime.strftime(
+                    closing_time, "%H:%M:%S %p")[:-3]
 
                 # Get calender date of opening and closing time
-                opening_date = today + datetime.timedelta(days=offset_open, weeks=0)
-                closing_date = today + datetime.timedelta(days=offset_close, weeks=0)
+                opening_date = today + \
+                    datetime.timedelta(days=offset_open, weeks=0)
+                closing_date = today + \
+                    datetime.timedelta(days=offset_close, weeks=0)
 
             # Store values in required format
             opening_time = str(opening_date) + "T" + opening_time
@@ -92,7 +100,8 @@ def reformat_timings(place_details):
 
 
 def prep_place_info(place, timing_details, day_picked, priority=1):
-    dwellTime = str(datetime.timedelta(hours=float(place["dwell_time"]))) + ".0000000"
+    dwellTime = str(datetime.timedelta(
+        hours=float(place["dwell_time"]))) + ".0000000"
 
     if day_picked in timing_details:
         timing_info = timing_details[day_picked]
@@ -184,7 +193,8 @@ class Maps(object):
                         "longitude": place["geometry"]["location"]["lng"]
                     }
                 }
-                input_info_dic["agents"][0]["shifts"][0] = {**input_info_dic["agents"][0]["shifts"][0], **start_info}
+                input_info_dic["agents"][0]["shifts"][0] = {
+                    **input_info_dic["agents"][0]["shifts"][0], **start_info}
 
                 if place["name"] == data["ending_point"]:
                     end_time = data["date"] + "T" + data["end_time"] + ":00"
@@ -196,7 +206,8 @@ class Maps(object):
                             "longitude": place["geometry"]["location"]["lng"]
                         }
                     }
-                    input_info_dic["agents"][0]["shifts"][0] = {**input_info_dic["agents"][0]["shifts"][0], **end_info}
+                    input_info_dic["agents"][0]["shifts"][0] = {
+                        **input_info_dic["agents"][0]["shifts"][0], **end_info}
 
             elif place["name"] == data["ending_point"]:
                 end_time = data["date"] + "T" + data["end_time"] + ":00"
@@ -209,10 +220,12 @@ class Maps(object):
                     }
                 }
 
-                input_info_dic["agents"][0]["shifts"][0] = {**input_info_dic["agents"][0]["shifts"][0], **end_info}
+                input_info_dic["agents"][0]["shifts"][0] = {
+                    **input_info_dic["agents"][0]["shifts"][0], **end_info}
 
             else:
-                check, item = prep_place_info(place, timing_details, data["date"])
+                check, item = prep_place_info(
+                    place, timing_details, data["date"])
                 if check:
                     input_info_dic["itineraryItems"].append(item)
 
@@ -221,7 +234,8 @@ class Maps(object):
 
         # Make an Bing API call
         endpoint_url = "https://dev.virtualearth.net/REST/V1/Routes/OptimizeItinerary"
-        response = requests.post(endpoint_url + "?key=" + self.bing_key, data=input_info)
+        response = requests.post(
+            endpoint_url + "?key=" + self.bing_key, data=input_info)
 
         try:
             # print(response.content)

@@ -3,171 +3,163 @@
   width: 50%;
 }
 .slider {
-  width:100%;
+  width: 100%;
 }
 
 .content .main .row {
-    display: flex;
+  display: flex;
 }
 .oneline {
- display: inline-block;
-
+  display: inline-block;
 }
 
-
 * {
-    font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 body {
-    background-color: #59c9fc;
-    text-align: center;
+  background-color: #59c9fc;
+  text-align: center;
 }
 
 .content {
-    display: flex;
-    margin: 100px auto;
-    width: 850px;
+  display: flex;
+  margin: 100px auto;
+  width: 850px;
 
-    padding: 60px;
+  padding: 60px;
 }
 
 .content .main input {
-
-    width: 94%;
-    font-size: 18px;
-    padding: 10px;
-    border: none;
-    outline: none;
-    background: none;
-    display: block;
-    border-radius: 30px;
-    border: 1px solid rgba(0,0,0,0.2);
-    padding: 10px;
-    margin-top: 20px;
-
+  width: 94%;
+  font-size: 18px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  background: none;
+  display: block;
+  border-radius: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  margin-top: 20px;
 }
 
 .main {
-    border-radius: 30px;
-    width: 100%;
-    background-color: white;
-    padding: 60px;
-    margin: 20px auto;
-    margin-left: 50px;
+  border-radius: 30px;
+  width: 100%;
+  background-color: white;
+  padding: 60px;
+  margin: 20px auto;
+  margin-left: 50px;
 }
 
 .main table {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .sidebar {
+  border-radius: 30px;
 
-    border-radius: 30px;
-
-    padding: 60px;
-    margin-left: 20px 5px auto;
+  padding: 60px;
+  margin-left: 20px 5px auto;
 }
 
 .module input {
-    margin: 5px auto;
+  margin: 5px auto;
 
-    font-size: 18px;
-    font-weight: bolder;
-    width: 150px;
+  font-size: 18px;
+  font-weight: bolder;
+  width: 150px;
 
-    border: none;
-    outline: none;
-    background: white;
+  border: none;
+  outline: none;
+  background: white;
 
-    padding: 5px 20px;
-    border: none;
+  padding: 5px 20px;
+  border: none;
 
-    border-radius: 30px;
-    border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .options input {
-    width: 100%;
+  width: 100%;
 
-    font-size: 16px;
-    color: white;
+  font-size: 16px;
+  color: white;
 
-    background-color: #59c9fc;
-    padding: 5px 20px;
-    border: none;
+  background-color: #59c9fc;
+  padding: 5px 20px;
+  border: none;
 
-    border-radius: 30px;
-    border: 1px solid rgba(0,0,0,0.2);
-
+  border-radius: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-
-.title, .sub-title {
-    text-align: center;
-    color: #505050;
+.title,
+.sub-title {
+  text-align: center;
+  color: #505050;
 }
 
 .title {
-    font-weight: bolder;
-    font-size: 35px;
+  font-weight: bolder;
+  font-size: 35px;
 }
 
 .sub-title {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .main .text {
-    width: 100px;
+  width: 100px;
 
-    font-size: 16px;
-
+  font-size: 16px;
 }
 
 #dwell_time {
-    width: 60%;
+  width: 60%;
 }
 
 ul {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 
 li input {
-    font-size: 14px !important;
-    padding: 0;
+  font-size: 14px !important;
+  padding: 0;
 }
 
 .content .main .search input {
-    width: 30%     !important;
-    display: table;
-    margin: 0 auto !important;
+  width: 30% !important;
+  display: table;
+  margin: 0 auto !important;
 }
 
 .content .main .button {
-    width: 25%     !important;
-    margin: 0 auto !important;
-    display: block !important;
+  width: 25% !important;
+  margin: 0 auto !important;
+  display: block !important;
 
-    /* align: right; */
-    background-color: #59c9fc !important;
+  /* align: right; */
+  background-color: #59c9fc !important;
 }
 
 .content .main .query_result {
-    margin: 0px auto;
-    font-size: 14px;
-    border: 0px solid rgba(0,0,0,0.2);
+  margin: 0px auto;
+  font-size: 14px;
+  border: 0px solid rgba(0, 0, 0, 0.2);
 }
 
 .query_result:hover {
-    font-weight: bolder;
-    color: #59c9fc;
+  font-weight: bolder;
+  color: #59c9fc;
 }
 
 .error {
-    width: 100%;
-    color: red;
-    text-align: center;
-    font-size: 18px;
+  width: 100%;
+  color: red;
+  text-align: center;
+  font-size: 18px;
 }
-

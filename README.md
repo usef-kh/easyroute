@@ -1,3 +1,3 @@
 # Easy Route
 
-Choose your favorite locatinos and landmarks and let us plan your day!
+Choose your favorite locations and landmarks and let us plan your day!

@@ -117,13 +117,14 @@ def create():
         else:
             error = "Removal Unsuccessful"
 
-
     else:  # add my selection to sidebar
 
         selection = list(data.keys())[0]  # only one selection will be made
-        selection = ast.literal_eval(selection)  # convert selection from str to dict
+        # convert selection from str to dict
+        selection = ast.literal_eval(selection)
 
-        itinerary[-1].update(selection)  # theres already dictionary that has dwell_time, update it
+        # theres already dictionary that has dwell_time, update it
+        itinerary[-1].update(selection)
         query_results = []  # reset query results, after choosing
 
     if "dwell_time" not in data:
@@ -215,7 +216,8 @@ def view():
     # print(schedule_dic)
     schedule = schedule_dic['schedule']
     # print(type(schedule), schedule)
-    key = "https://maps.googleapis.com/maps/api/js?key=" + maps.gmaps_key + "&callback=initMap"
+    key = "https://maps.googleapis.com/maps/api/js?key=" + \
+        maps.gmaps_key + "&callback=initMap"
     return render_template(
         "view.html",
         schedule=schedule,

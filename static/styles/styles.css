@@ -1,99 +1,97 @@
 * {
-    font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 body {
-    background-color: #59c9fc;
+  background-color: #59c9fc;
 }
 
 .content {
-    display: flex;
-    margin: 100px auto;
-    width: 850px;
+  display: flex;
+  margin: 100px auto;
+  width: 850px;
 
-    padding: 60px;
+  padding: 60px;
 }
 .main {
-    border-radius: 30px;
-    width: 100%;
-    background-color: white;
-    padding: 60px;
-    margin: 20px auto;
-    margin-left: 50px;
+  border-radius: 30px;
+  width: 100%;
+  background-color: white;
+  padding: 60px;
+  margin: 20px auto;
+  margin-left: 50px;
 }
 
 .main table {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .sidebar {
+  border-radius: 30px;
 
-    border-radius: 30px;
-
-    padding: 60px;
-    margin-left: 20px 5px auto;
+  padding: 60px;
+  margin-left: 20px 5px auto;
 }
 
 .module input {
-    margin: 5px auto;
+  margin: 5px auto;
 
-    font-size: 18px;
-    font-weight: bolder;
-    width: 150px;
+  font-size: 18px;
+  font-weight: bolder;
+  width: 150px;
 
-    border: none;
-    outline: none;
-    background: white;
+  border: none;
+  outline: none;
+  background: white;
 
-    padding: 5px 20px;
-    border: none;
+  padding: 5px 20px;
+  border: none;
 
-    border-radius: 30px;
-    border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .options input {
-    width: 100%;
+  width: 100%;
 
-    font-size: 16px;
-    color: white;
+  font-size: 16px;
+  color: white;
 
-    background-color: #59c9fc;
-    padding: 5px 20px;
-    border: none;
+  background-color: #59c9fc;
+  padding: 5px 20px;
+  border: none;
 
-    border-radius: 30px;
-    border: 1px solid rgba(0,0,0,0.2);
-
+  border-radius: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-
-.title, .sub-title {
-    text-align: center;
-    color: #505050;
+.title,
+.sub-title {
+  text-align: center;
+  color: #505050;
 }
 
 .title {
-    font-weight: bolder;
-    font-size: 35px;
+  font-weight: bolder;
+  font-size: 35px;
 }
 
 .sub-title {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .main .text {
-    width: 100px;
-
-    font-size: 16px;
-
+  width: 100px;
+  font-size: 16px;
 }
 
-a:link, a:visited {
+a:link,
+a:visited {
   color: #59c9fc;
   text-decoration: none;
 }
 
-a:hover, a:active {
-    font-weight: bolder;
+a:hover,
+a:active {
+  font-weight: bolder;
 }
