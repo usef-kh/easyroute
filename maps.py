@@ -173,8 +173,7 @@ class Maps(object):
 
     def route(self, itinerary, data):
         # print(itinerary)
-        input_info_dic = {}
-        input_info_dic["itineraryItems"] = []
+        input_info_dic = {"itineraryItems": []}
         agentName = "agentName"
         input_info_dic["agents"] = [{"name": agentName, "shifts": [{}]}]
 
