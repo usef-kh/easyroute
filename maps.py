@@ -3,6 +3,8 @@ import json
 
 import requests
 
+from modules import AgentInfo
+
 
 def reformat_timings(place_details):
     days = [
@@ -47,7 +49,7 @@ def reformat_timings(place_details):
 
                 opening_date = calender_date
                 closing_date = today + \
-                    datetime.timedelta(days=offset[day], weeks=0)
+                               datetime.timedelta(days=offset[day], weeks=0)
 
             else:
                 opening_time, closing_time = times.split(" – ")
@@ -76,9 +78,9 @@ def reformat_timings(place_details):
 
                 # Get calender date of opening and closing time
                 opening_date = today + \
-                    datetime.timedelta(days=offset_open, weeks=0)
+                               datetime.timedelta(days=offset_open, weeks=0)
                 closing_date = today + \
-                    datetime.timedelta(days=offset_close, weeks=0)
+                               datetime.timedelta(days=offset_close, weeks=0)
 
             # Store values in required format
             opening_time = str(opening_date) + "T" + opening_time
@@ -162,7 +164,7 @@ class Maps(object):
         response = requests.get(endpoint_url, params=params)
 
         result = json.loads(response.content)
-        # print(result)
+
         if "result" not in result:
             timings = reformat_timings({})
 
@@ -178,53 +180,28 @@ class Maps(object):
         input_info_dic["agents"] = [{"name": agentName, "shifts": [{}]}]
 
         for place in itinerary:
-            # print(place )
-            # print("\n")
             timing_details = self.get_timing_details(place["place_id"])
 
             if place["name"] == data["starting_point"]:
-                start_time = data["date"] + "T" + data["start_time"] + ":00"
-                start_info = {
-                    "name": place["name"],
-                    "startTime": start_time,
-                    "startLocation": {
-                        "latitude": place["geometry"]["location"]["lat"],
-                        "longitude": place["geometry"]["location"]["lng"]
-                    }
-                }
-                input_info_dic["agents"][0]["shifts"][0] = {
-                    **input_info_dic["agents"][0]["shifts"][0], **start_info}
+                time = data["date"] + "T" + data["start_time"] + ":00"
+                info = AgentInfo(place, time=time, start=True)
+
+                input_info_dic["agents"][0]["shifts"][0].update(info)
 
                 if place["name"] == data["ending_point"]:
-                    end_time = data["date"] + "T" + data["end_time"] + ":00"
-                    end_info = {
-                        "name": place["name"],
-                        "endTime": end_time,
-                        "endLocation": {
-                            "latitude": place["geometry"]["location"]["lat"],
-                            "longitude": place["geometry"]["location"]["lng"]
-                        }
-                    }
-                    input_info_dic["agents"][0]["shifts"][0] = {
-                        **input_info_dic["agents"][0]["shifts"][0], **end_info}
+                    time = data["date"] + "T" + data["end_time"] + ":00"
+                    info = AgentInfo(place, time=time, start=False)
+
+                    input_info_dic["agents"][0]["shifts"][0].update(info)
 
             elif place["name"] == data["ending_point"]:
-                end_time = data["date"] + "T" + data["end_time"] + ":00"
-                end_info = {
-                    "name": place["name"],
-                    "endTime": end_time,
-                    "endLocation": {
-                        "latitude": place["geometry"]["location"]["lat"],
-                        "longitude": place["geometry"]["location"]["lng"]
-                    }
-                }
+                time = data["date"] + "T" + data["end_time"] + ":00"
+                info = AgentInfo(place, time=time, start=False)
 
-                input_info_dic["agents"][0]["shifts"][0] = {
-                    **input_info_dic["agents"][0]["shifts"][0], **end_info}
+                input_info_dic["agents"][0]["shifts"][0].update(info)
 
             else:
-                check, item = prep_place_info(
-                    place, timing_details, data["date"])
+                check, item = prep_place_info(place, timing_details, data["date"])
                 if check:
                     input_info_dic["itineraryItems"].append(item)
 
@@ -233,13 +210,15 @@ class Maps(object):
 
         # Make an Bing API call
         endpoint_url = "https://dev.virtualearth.net/REST/V1/Routes/OptimizeItinerary"
-        response = requests.post(
-            endpoint_url + "?key=" + self.bing_key, data=input_info)
+        response = requests.post(f"{endpoint_url}?key={self.bing_key}", data=input_info)
 
         try:
-            # print(response.content)
             response_dic = json.loads(response.content)
-            return True, response_dic["resourceSets"][0]["resources"][0]["agentItineraries"][0]["instructions"]
+
+            # the results is found after 3 nested dicts/lists (all indexed at 0)
+            instructions = response_dic["resourceSets"][0]["resources"][0]["agentItineraries"][0]["instructions"]
+
+            return True, instructions
 
         except Exception as e:
             return False, e

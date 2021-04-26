@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for
 
 from databases.users import Users
 from maps import Maps
+from modules import ItineraryItem
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 maps = Maps()
@@ -153,7 +154,6 @@ def complete():
             date=datetime.date.today(),
             itinerary=itinerary,
         )
-    # if starting or ending need to make sure that the time matches the time of the place if it has opening or closing time
 
     data = request.form
     check, info = maps.route(itinerary, data)
@@ -173,57 +173,50 @@ def complete():
         if instruction["instructionType"] == "LeaveFromStartPoint":
             place = instruction["itineraryItem"]
 
-            item = {
-                "name": data["starting_point"],
-                "arrivingTime": "N/A",
-                "leavingTime": get_time(instruction["startTime"]),
-                "dwellTime": "N/A",
-                "location": place["location"],
-            }
+            item = ItineraryItem(
+                name=data["starting_point"],
+                leavingTime=get_time(instruction["startTime"]),
+                location=place["location"]
+            )
 
             schedule.append(item)
 
         elif instruction["instructionType"] == "TravelBetweenLocations":
             continue  # for now lets ignore showing travel times
-            # print("travel to the next location", "duration=", instruction["duration"], "distance=",
-            #       instruction["distance"])
 
         elif instruction["instructionType"] == "VisitLocation":
             place = instruction["itineraryItem"]
-            # print(instruction["startTime"],instruction["startTime"])
-            item = {
-                "name": place["name"],
-                "arrivingTime": get_time(instruction["startTime"]),
-                "leavingTime": get_time(instruction["endTime"]),
-                "dwellTime": place["dwellTime"],
-                "location": place["location"],
-            }
+
+            item = ItineraryItem(
+                name=place["name"],
+                dwellTime=place["dwellTime"],
+                arrivingTime=get_time(instruction["startTime"]),
+                leavingTime=get_time(instruction["endTime"]),
+                location=place["location"]
+            )
 
             schedule.append(item)
 
         elif instruction["instructionType"] == "ArriveToEndPoint":
             place = instruction["itineraryItem"]
-            item = {
-                "name": data["ending_point"],
-                "arrivingTime": get_time(instruction["startTime"]),
-                "leavingTime": "N/A",
-                "dwellTime": "N/A",
-                "location": place["location"],
-            }
+
+            item = ItineraryItem(
+                name=data["ending_point"],
+                arrivingTime=get_time(instruction["startTime"]),
+                location=place["location"]
+            )
 
             schedule.append(item)
-    print(schedule)
+
     return redirect(url_for('view', schedule={"schedule": schedule}))
 
 
 @app.route('/user/view', methods=['POST', 'GET'])
 def view():
     schedule_dic = ast.literal_eval(request.args['schedule'])
-    # print(schedule_dic)
     schedule = schedule_dic['schedule']
-    # print(type(schedule), schedule)
-    key = "https://maps.googleapis.com/maps/api/js?key=" + \
-        maps.gmaps_key + "&callback=initMap"
+    key = f"https://maps.googleapis.com/maps/api/js?key={maps.gmaps_key}&callback=initMap"
+
     return render_template(
         "view.html",
         schedule=schedule,
