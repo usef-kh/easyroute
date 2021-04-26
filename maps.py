@@ -102,8 +102,7 @@ def reformat_timings(place_details):
 
 
 def prep_place_info(place, timing_details, day_picked, priority=1):
-    dwellTime = str(datetime.timedelta(
-        hours=float(place["dwell_time"]))) + ".0000000"
+    dwellTime = str(datetime.timedelta(hours=float(place["dwell_time"]))) + ".0000000"
 
     if day_picked in timing_details:
         timing_info = timing_details[day_picked]
@@ -175,6 +174,8 @@ class Maps(object):
 
     def route(self, itinerary, data):
         # print(itinerary)
+        failures = []
+
         input_info_dic = {"itineraryItems": []}
         agentName = "agentName"
         input_info_dic["agents"] = [{"name": agentName, "shifts": [{}]}]
@@ -205,8 +206,14 @@ class Maps(object):
                 if check:
                     input_info_dic["itineraryItems"].append(item)
 
+                else:
+                    failure = dict(name=place["name"], reason=item)
+                    failures.append(failure)
+
         # Making the dic from all the info into json for the bing api call
         input_info = json.dumps(input_info_dic)
+
+        print(failures)
 
         # Make an Bing API call
         endpoint_url = "https://dev.virtualearth.net/REST/V1/Routes/OptimizeItinerary"
@@ -215,10 +222,14 @@ class Maps(object):
         try:
             response_dic = json.loads(response.content)
 
+            for unshedualed_item in response_dic["resourceSets"][0]["resources"][0]["unscheduledItems"]:
+                unshedualed_item["reason"] = "Not possible or too far"
+                failures.append(unshedualed_item)
+
             # the results is found after 3 nested dicts/lists (all indexed at 0)
             instructions = response_dic["resourceSets"][0]["resources"][0]["agentItineraries"][0]["instructions"]
 
-            return True, instructions
+            return True, (instructions, failures)
 
         except Exception as e:
             return False, e

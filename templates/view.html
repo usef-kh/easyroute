@@ -83,6 +83,14 @@
                         <td align="center" valign="center">{{item["dwellTime"]}}</td>
                     </tr>
                     {% endfor %}
+
+                    {% for item in failures %}
+                    <tr>
+                        <td align="center" valign="center">{{item["name"]}}</td>
+                        <td align="center" valign="center" colspan="3">{{item["reason"]}}</td>
+                    </tr>
+                    {% endfor %}
+
                 </table>
 
                 <div class="error">{{error}}</div>

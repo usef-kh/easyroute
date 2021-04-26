@@ -167,9 +167,10 @@ def complete():
             itinerary=itinerary,
             error=info,
         )
-
+    instructions, failures = info
+    print(failures)
     schedule = []
-    for instruction in info:
+    for instruction in instructions:
         if instruction["instructionType"] == "LeaveFromStartPoint":
             place = instruction["itineraryItem"]
 
@@ -208,19 +209,20 @@ def complete():
 
             schedule.append(item)
 
-    return redirect(url_for('view', schedule={"schedule": schedule}))
+    return redirect(url_for('view', info={"schedule": schedule, "failures": failures}))
 
 
 @app.route('/user/view', methods=['POST', 'GET'])
 def view():
-    schedule_dic = ast.literal_eval(request.args['schedule'])
-    schedule = schedule_dic['schedule']
+    info_dic = ast.literal_eval(request.args['info'])
+
     key = f"https://maps.googleapis.com/maps/api/js?key={maps.gmaps_key}&callback=initMap"
 
     return render_template(
         "view.html",
-        schedule=schedule,
-        key=key
+        schedule=info_dic['schedule'],
+        failures=info_dic['failures'],
+        key=key,
     )
 
 
