@@ -95,12 +95,18 @@ def create():
             count = min(len(places), 10)
             query_results = places[:count]
 
-            # create a dictionary where we will add all the info in later (check the else clause)
-            info = {
-                "dwell_time": data["dwell_time"]
-            }
+            if query_results:
 
-            itinerary.append(info)
+                # create a dictionary where we will add all the info in later (check the else clause)
+                info = {
+                    "dwell_time": data["dwell_time"]
+                }
+
+                if itinerary and "name" not in itinerary[-1]:
+                    itinerary[-1] = info
+
+                else:
+                    itinerary.append(info)
 
     elif "itinerary" in data:  # remove unwanted itinerary item
 
