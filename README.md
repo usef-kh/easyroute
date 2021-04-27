@@ -9,3 +9,4 @@ Choose your favorite locations and landmarks and let us plan your day!
 
 ## Contact
 - Yousif Khaireddin ykh@bu.edu
+- Maxime Sabet 
