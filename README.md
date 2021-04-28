@@ -2,9 +2,10 @@
 
 Choose your favorite locations and landmarks and let us plan your day!
 
-## Demo
-
+## Useful Links
 - [Demo](https://drive.google.com/file/d/1Z-PYvm9hh573mX1lndrtSaVEIxrtGSSu/view?usp=sharing)
+- [Google Maps API](https://developers.google.com/maps)
+- [Bing API](https://www.microsoft.com/en-us/maps/multi-itinerary-optimization)
 
 ## Basically
 
@@ -79,12 +80,6 @@ Run your app locally:
 ```
 flask run
 ```
-
-
-## Useful Links
-- [Demo](https://drive.google.com/file/d/1Z-PYvm9hh573mX1lndrtSaVEIxrtGSSu/view?usp=sharing)
-- [Google Maps API](https://developers.google.com/maps)
-- [Bing API](https://www.microsoft.com/en-us/maps/multi-itinerary-optimization)
 
 ## Contact
 - Yousif Khaireddin ykh@bu.edu
