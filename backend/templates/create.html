@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      href="{{url_for('static',filename='styles/create.css') }}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+    .content {
+      width: 1500px;
+    }
+    </style>
+
+    <meta charset="UTF-8" />
+    <title>Easy Route</title>
+  </head>
+
+  <body>
+  <div class="content">
+    <div class="main">
+        <div class="title">Easy Route</div>
+        <div class="sub-title">Create a new itinerary</div> <br>
+
+      <form
+        action="{{url_for('create')}}"
+        method="POST"
+        id="search"
+        name="search"
+        class="search"
+      >
+        <input id="query" name="query" placeholder="Query" type="text" value={{ data['query'] }}>
+        <br>
+
+        <input
+            type="range"
+            id="dwell_time"
+            name="dwell_time"
+            min="0"
+            max="10"
+            step="0.5"
+            value="{{data['dwell_time']}}"
+            oninput="this.nextElementSibling.value = this.value + ' Hour(s)' "
+          />
+        <output>{{data["dwell_time"]}} Hour(s)</output><br><br>
+
+
+        <input class="button" type="submit" value="Search" name="search" /><br>
+
+      </form>
+
+
+
+      <form
+        action="{{url_for('create')}}"
+        method="POST"
+        id="display_search"
+        name="display_search"
+        class="column"
+      >
+        <h2>Search Results</h2>
+        <ul>
+          {% for result in query_results %}
+          <li>
+            <input class="query_result" value="{{result['name'] + ' - ' + result['formatted_address']}}" name="{{result}}" type="submit" />
+          </li>
+          {% endfor %}
+        </ul>
+      </form>
+
+      <form
+        action="{{url_for('create')}}"
+        method="POST"
+        id="itinerary"
+        name="itinerary"
+        class="column"
+      >
+        <h2>Your itinerary</h2>
+        <ul>
+          {% for place in itinerary %}
+          <li>
+            <input class="query_result" value="{{place['name']}}" name="itinerary" type="submit" />
+          </li>
+          {% endfor %}
+        </ul>
+      </form>
+
+      <form
+        action="{{url_for('complete')}}"
+        method="GET"
+        id="selected_spots"
+        name="selected_spots"
+      >
+        <div class="search">
+        <input class="button" type="submit" value="Confirm" name="confirm"/>
+        </div>
+      </form>
+<br><br>
+
+          <div class="error">{{error}}</div>
+
+
+    </div>
+
+
+    <div class="sidebar">
+      <form action="{{url_for('index')}}" class="module">
+          <input type="submit" value="Logout">
+      </form>
+
+        <form action="{{url_for('create')}}" class="module" method="GET">
+          <input type="submit" value="Reset">
+      </form>
+
+    </div>
+
+
+
+  </body>
+</html>

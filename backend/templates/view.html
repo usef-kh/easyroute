@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="{{url_for('static',filename='styles/styles.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+
+    <title>Easy Route</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCVR9-uTJlxSxDlTU70Jdz5i_MJGypdrbE&callback=initMap"
+        type="text/javascript">
+        </script>
+
+    <script type="text/javascript">
+        function initMap() {
+            var stuff = '{{schedule | tojson | safe }}';
+            var places = JSON.parse(stuff);
+            const map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: places[0]["location"]["latitude"], lng: places[0]["location"]["longitude"] },
+                zoom: 12,
+            });
+            if (places[0]["location"]["latitude"] == places[places.length - 1]["location"]["latitude"] && places[0]["location"]["longitude"] == places[places.length - 1]["location"]["longitude"]) places.pop()
+
+            for (let place = 0; place < places.length; place++) {
+                let stopNumber = place + 1
+                new google.maps.Marker({ position: { lat: places[place]["location"]["latitude"], lng: places[place]["location"]["longitude"] }, map, title: places[place]["name"], label: String(stopNumber) });
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #59c9fc;
+        }
+
+        .content {
+            width: 1200px;
+        }
+
+        .main table {
+            margin: 0 auto;
+            width: 80%;
+            border-spacing: 0 50px;
+        }
+    </style>
+
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+    <div class="content">
+
+        <div class="main">
+
+            <div class="schedule">
+                <div class="title">Easy Route</div>
+                <div class="sub-title">Schedule</div><br>
+
+                <table>
+                    <tr>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Arrival Time</th>
+                        <th class="text-center">Departure Time</th>
+                        <th class="text-center">Dwell Time</th>
+                    </tr>
+
+
+                    {% for item in schedule %}
+                    <tr>
+                        <td align="center" valign="center">{{item["name"]}}</td>
+                        <td align="center" valign="center">{{item["arrivingTime"]}}</td>
+                        <td align="center" valign="center">{{item["leavingTime"]}}</td>
+                        <td align="center" valign="center">{{item["dwellTime"]}}</td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for item in failures %}
+                    <tr>
+                        <td align="center" valign="center">{{item["name"]}}</td>
+                        <td align="center" valign="center" colspan="3">{{item["reason"]}}</td>
+                    </tr>
+                    {% endfor %}
+
+                </table>
+
+                <div class="error">{{error}}</div>
+            </div>
+
+            <div class="map">
+                <br><br>
+                <div id="map" style="width:100%; height:300px;"></div>
+            </div>
+
+
+        </div>
+
+        <div class="sidebar">
+
+            <form action="{{url_for('index')}}" class="module">
+                <input type="submit" value="Logout">
+            </form>
+
+            <form action="{{url_for('home')}}" class="module">
+                <input type="submit" value="Home">
+            </form>
+
+            <form action="{{url_for('create')}}" class="module">
+                <input type="submit" value="New Trip">
+            </form>
+
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
