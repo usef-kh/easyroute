@@ -48,7 +48,7 @@ def login():
 
     users = Users()
 
-    data = request.form
+    data = request.form.to_dict()
 
     username = data['username']
     password = data['password']
@@ -155,7 +155,7 @@ def complete():
             itinerary=itinerary,
         )
 
-    data = request.form
+    data = request.form.to_dict()
     check, info = maps.route(itinerary, data)
 
     # if something goes bad, try again
@@ -167,6 +167,7 @@ def complete():
             itinerary=itinerary,
             error=info,
         )
+
     instructions, failures = info
     print(failures)
     schedule = []

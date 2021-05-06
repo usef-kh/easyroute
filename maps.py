@@ -6,6 +6,13 @@ import requests
 from modules import AgentInfo
 
 
+def this_week(dateString):
+    '''returns true if a dateString in %Y%m%d format is part of the current week'''
+    d1 = datetime.datetime.strptime(dateString, '%Y-%m-%d')
+    d2 = datetime.datetime.today()
+    return d1.isocalendar()[1] == d2.isocalendar()[1] and d1.year == d2.year
+
+
 def reformat_timings(place_details):
     days = [
         "monday",
@@ -104,28 +111,26 @@ def reformat_timings(place_details):
 def prep_place_info(place, timing_details, day_picked, priority=1):
     dwellTime = str(datetime.timedelta(hours=float(place["dwell_time"]))) + ".0000000"
 
-    if day_picked in timing_details:
-        timing_info = timing_details[day_picked]
+    timing_info = timing_details[day_picked]
 
-        if timing_info['openingTime'] == "Closed":
-            return False, "Place closed"
+    if timing_info['openingTime'] == "Closed":
+        return False, "Place closed"
 
-        else:
-            place_details_formatted = {
-                "name": place["name"],
-                "openingTime": timing_info["openingTime"],
-                "closingTime": timing_info["closingTime"],
-                "dwellTime": dwellTime,
-                "priority": priority,
-                "quantity": [],
-                "location": {
-                    "latitude": place["geometry"]["location"]["lat"],
-                    "longitude": place["geometry"]["location"]["lng"]
-                }
-            }
-            return True, place_details_formatted
     else:
-        return False, "Day entered doesnt exit"
+        place_details_formatted = {
+            "name": place["name"],
+            "openingTime": timing_info["openingTime"],
+            "closingTime": timing_info["closingTime"],
+            "dwellTime": dwellTime,
+            "priority": priority,
+            "quantity": [],
+            "location": {
+                "latitude": place["geometry"]["location"]["lat"],
+                "longitude": place["geometry"]["location"]["lng"]
+            }
+        }
+
+        return True, place_details_formatted
 
 
 class Maps(object):
@@ -174,6 +179,15 @@ class Maps(object):
 
     def route(self, itinerary, data):
         # print(itinerary)
+
+        if not this_week(data["date"]):
+            today = datetime.date.today()
+
+            day_number = datetime.datetime.strptime(data["date"], '%Y-%m-%d').weekday()
+            day = str(today + datetime.timedelta(days=-today.weekday() + day_number,
+                                                 weeks=0))  # if tuesday give tuesday of this week
+            data["date"] = day
+
         failures = []
 
         input_info_dic = {"itineraryItems": []}
@@ -203,6 +217,7 @@ class Maps(object):
 
             else:
                 check, item = prep_place_info(place, timing_details, data["date"])
+                print(check, item)
                 if check:
                     input_info_dic["itineraryItems"].append(item)
 
