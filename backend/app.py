@@ -15,7 +15,8 @@ itinerary = []  # this is a global variable that contains where the user wats to
 
 @app.route('/')
 def index():
-    return render_template("index.html", token="Hello Flask+React")
+    return {'name':'Hello World'}
+    # return render_template("index.html", token="Hello Flask+React")
 
 
 @app.route('/user/signup', methods=['POST', 'GET'])

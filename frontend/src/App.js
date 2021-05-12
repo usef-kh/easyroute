@@ -1,24 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
+// in frontend dir: npm run build every time you make changes
+// then in backend dir: python app.py
+
+// import logo from "./logo.svg";
+// import "./App.css";
+import Startup from "./components/Startup";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>My Token = {window.token}</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Startup/>
     </div>
   );
 }
